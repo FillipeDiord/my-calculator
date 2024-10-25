@@ -16,11 +16,16 @@ export async function createUser({ userName, password }: UserProps) {
 
     const response = await fetch(`${API_URL}/auth/register`, optionsRequest);
 
-    if (response.status === 400) {
-      
+    debugger;
+
+    if (response.status === 200 || response.status === 201) {
+      const result = await response.json();
+
+      debugger;
+
+      console.log('=========== RESULTADO DA MERDA', result);
+      // return 
     }
-
-
 
   } catch (error) {
     console.log("Error creating a user", error);
