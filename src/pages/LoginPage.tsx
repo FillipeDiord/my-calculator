@@ -1,5 +1,11 @@
-export function LoginPage() {
-  function handleLogin(userName, password) {}
+import { SignIn } from "../components/SignIn";
 
-  return <></>;
+export function LoginPage() {
+  // function handleLogin(userName, password) {}
+
+  return (
+    <>
+      <SignIn />
+    </>
+  );
 }
