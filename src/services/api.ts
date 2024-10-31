@@ -1,6 +1,6 @@
 import { UserProps } from "../interfaces/UserProps";
 
-const API_URL = "http://localhost:8080/api";
+const API_URL = "http://localhost:8080";
 
 export async function createUser({ userName, password }: UserProps) {
   try {
@@ -12,6 +12,9 @@ export async function createUser({ userName, password }: UserProps) {
     const optionsRequest = {
       method: "POST",
       body: JSON.stringify(user),
+      headers: {
+          "Content-Type": "application/json",
+      },
     };
 
     const response = await fetch(`${API_URL}/auth/register`, optionsRequest);
