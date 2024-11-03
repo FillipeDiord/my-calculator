@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { login } from "../../services/api";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -60,16 +62,24 @@ export function SignIn() {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (userNameError || passwordError) {
       return;
     }
     const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get("username"),
+
+    const user = {
+      userName: data.get("username"),
       password: data.get("password"),
-    });
+    };
+    
+    try {
+      await login(user);
+
+    } catch (error) {
+      console.log("An error occurred while logging in", error);
+    }
   };
 
   const validateInputs = () => {
@@ -172,9 +182,7 @@ export function SignIn() {
             <Typography sx={{ textAlign: "center" }}>
               Don&apos;t have an account?{" "}
               <span>
-                <Link to={"/register"}>
-                  Sign up
-                </Link>
+                <Link to={"/register"}>Sign up</Link>
               </span>
             </Typography>
           </Box>

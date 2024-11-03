@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { createUser } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -60,6 +61,7 @@ export function SignUp() {
   const [userNameErrorMessage, setUserNameErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const validateInputs = () => {
     const userName = document.getElementById("username") as HTMLInputElement;
@@ -95,19 +97,18 @@ export function SignUp() {
     }
     const data = new FormData(event.currentTarget);
 
-    console.log({
-      userName: data.get("username"),
-      password: data.get("password"),
-    });
-
     const user = {
       userName: data.get("username"),
-      password: data.get("password")
+      password: data.get("password"),
+    };
+
+    try {
+      await createUser(user);
+      navigate("/");
+      
+    } catch (error) {
+      console.error("Error submitting form", error);
     }
-
-    const result = await createUser(user);
-
-    debugger;
   };
 
   return (
