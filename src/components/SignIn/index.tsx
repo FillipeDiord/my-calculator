@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../../services/api";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
+import { toast } from "react-toastify";
 
 import { styled } from "@mui/material/styles";
 
@@ -61,6 +64,8 @@ export function SignIn() {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const { setUserToken } = useAuth();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -70,20 +75,30 @@ export function SignIn() {
     const data = new FormData(event.currentTarget);
 
     const user = {
-      userName: data.get("username"),
+      userName: data.get("userName"),
       password: data.get("password"),
     };
-    
-    try {
-      await login(user);
 
+    try {
+      const { token } = await login(user);
+
+      if (token) {
+        localStorage.setItem("userToken", token);
+        setUserToken(token);
+        navigate("home");
+        toast.success("Login success!");
+        return;
+      }
+
+      throw new Error();
     } catch (error) {
       console.log("An error occurred while logging in", error);
+      toast.error(`An error occurred during login, please contact support`);
     }
   };
 
   const validateInputs = () => {
-    const username = document.getElementById("username") as HTMLInputElement;
+    const username = document.getElementById("userName") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
 
     let isValid = true;
@@ -139,9 +154,9 @@ export function SignIn() {
               <TextField
                 error={userNameError}
                 helperText={emailErrorMessage}
-                id="username"
+                id="userName"
                 type="text"
-                name="username"
+                name="userName"
                 placeholder="username"
                 autoComplete="username"
                 autoFocus
