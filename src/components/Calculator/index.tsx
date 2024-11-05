@@ -1,25 +1,29 @@
 import { useState } from "react";
 import { Box, Button, Grid2, InputBase } from "@mui/material";
-import { evaluate, sqrt } from "mathjs";
+import { calculateOperation } from "../../services/api";
+
+import { toast } from "react-toastify";
 
 export const Calculator: React.FC = () => {
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState<string>("0");
 
   const handleClick = (value: string) => {
-    if (value === "√") {
-      try {
-        setInput(sqrt(parseFloat(input)).toString());
-      } catch {
-        setInput("Error");
-      }
-    } else {
-      setInput(input + value);
-    }
+    setInput(prevInput => prevInput === "0" ? value : prevInput + value);
   };
 
-  const handleEqual = () => {
+  const handleEqual = async () => {
     try {
-      setInput(evaluate(input).toString());
+
+      const userId = localStorage.getItem("userId");
+
+      if (!userId) {
+        return toast.error("Log in again to get user id, user id not found");
+      }
+
+      const response = await calculateOperation(userId, input);
+
+      console.log("===== RESULTADO", response);
+
     } catch {
       setInput("Error");
     }
@@ -27,7 +31,7 @@ export const Calculator: React.FC = () => {
 
   const handleClear = () => {
     try {
-      setInput("");
+      setInput("0");
     } catch {
       setInput("Error");
     }
@@ -59,7 +63,6 @@ export const Calculator: React.FC = () => {
         value={input}
         inputProps={{ style: { textAlign: "center" } }}
         fullWidth
-        defaultValue={0}
       />
       <Grid2 container spacing={1} margin={2}>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (

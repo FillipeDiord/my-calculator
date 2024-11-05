@@ -80,10 +80,11 @@ export function SignIn() {
     };
 
     try {
-      const { token } = await login(user);
-
+      const { token, userId } = await login(user);
+      
       if (token) {
         localStorage.setItem("userToken", token);
+        localStorage.setItem("userId", userId);
         setUserToken(token);
         navigate("home");
         toast.success("Login success!");
