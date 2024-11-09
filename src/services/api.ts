@@ -20,7 +20,7 @@ export async function createUser({ userName, password }: UserProps) {
 
     const response = await fetch(`${API_URL}/auth/register`, optionsRequest);
 
-    if (response.status === 200 || response.status === 201) {
+    if (response.ok) {
       await response.json();
       toast.success("User created successfully!");
 
@@ -63,7 +63,7 @@ export async function login({ userName, password }: UserProps) {
   }
 }
 
-export async function calculateOperation(userId: string, operation: string) {
+export async function calculateOperation(userId: number, operation: string) {
   try {
     const operations = {
       userId,
@@ -96,9 +96,90 @@ export async function calculateOperation(userId: string, operation: string) {
       const errorData = await response.json();
       throw new Error(errorData.message || "An unknown error occurred");
     }
-
   } catch (error) {
     console.log("An error occurred when trying to calculate operation", error);
-    toast.error("An error occurred when trying to calculate operation");
+    toast.error(
+      `An error occurred when trying to calculate operation ${error}`
+    );
+  }
+}
+
+export async function generateRandomString() {
+  try {
+    const userToken = localStorage.getItem("userToken");
+    const userId = Number(localStorage.getItem("userId"));
+
+    if (!userToken) {
+      toast.error("Unable to get user token");
+      return;
+    }
+
+    const optionsRequest = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+
+    const response = await fetch(
+      `${API_URL}/operations/random-string?userId=${userId}`,
+      optionsRequest
+    );
+
+    if (response.ok) {
+      const data = await response.text();
+      return data;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "An unknown error occurred");
+    }
+  } catch (error) {
+    console.log("An error occurred while generating the random string", error);
+    toast.error(
+      `An error occurred while generating the random string ${error}`
+    );
+    return;
+  }
+}
+
+export async function currentBalance() {
+  try {
+    const userToken = localStorage.getItem("userToken");
+    const userId = Number(localStorage.getItem("userId"));
+
+    if (!userToken) {
+      toast.error("Unable to get user token");
+      return;
+    }
+
+    if (!userId) {
+      toast.error("Unable to get userId");
+      return;
+    }
+
+    const optionsRequest = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+
+    const response = await fetch(`${API_URL}/users/balance?userId=${userId}`, optionsRequest);
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "An unknown error occurred");
+    }
+  } catch (error) {
+    console.log("An error occurred while getting the current balance", error);
+    toast.error(
+      `An error occurred while getting the current balance ${error}`
+    );
+    return;
   }
 }

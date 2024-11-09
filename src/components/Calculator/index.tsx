@@ -4,28 +4,32 @@ import { calculateOperation } from "../../services/api";
 
 import { toast } from "react-toastify";
 
-export const Calculator: React.FC = () => {
+import { CalculatorProps } from "../../interfaces/CalculatorProps";
+
+export const Calculator = ({ onInputChange }: CalculatorProps) => {
   const [input, setInput] = useState<string>("0");
 
   const handleClick = (value: string) => {
-    setInput(prevInput => prevInput === "0" ? value : prevInput + value);
+    setInput((prevInput) => (prevInput === "0" ? value : prevInput + value));
   };
 
   const handleEqual = async () => {
     try {
-
       const userId = localStorage.getItem("userId");
-
       if (!userId) {
         return toast.error("Log in again to get user id, user id not found");
       }
 
-      const response = await calculateOperation(userId, input);
+      let processedInput = input;
+      processedInput = processedInput.replace(/√(\d+)/g, "sqrt($1)");
+      const response = await calculateOperation(Number(userId), processedInput);
 
-      console.log("===== RESULTADO", response);
+      setInput(response);
+      onInputChange(response);
 
+      return;
     } catch {
-      setInput("Error");
+      setInput("0");
     }
   };
 
