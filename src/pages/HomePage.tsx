@@ -21,8 +21,8 @@ export function HomePage() {
     return;
   };
 
-  const handleInputChange = (value: string) => { 
-    setInputValue(value); 
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
   };
 
   useEffect(() => {
@@ -47,27 +47,32 @@ export function HomePage() {
           <InputBase
             sx={{
               bgcolor: "#FFFFFF",
-              border: "2px solid #0a0a0a",
+              border: "1px solid #cccccc",
               borderRadius: 2,
               padding: 1,
-              height: 40,
-              color: "#033261",
+              height: 46,
+              color: "#333",
               pointerEvents: "none",
               userSelect: "none",
-              fontWeight: 600, 
-              justifyContent: "initial",
-              maxWidth: 120
+              fontWeight: 600,
+              fontSize: 24,
+              mb: 2,
             }}
             value={currentBalanceValue}
             inputProps={{ style: { textAlign: "center" } }}
+            fullWidth
           />
-          <Button variant="contained" onClick={() => navigate("/")}>
-            Sair
+          <Button
+            variant="contained"
+            style={{ maxHeight: 46 }}
+            onClick={() => navigate("/")}
+          >
+            logout
           </Button>
         </Box>
       </Container>
       <Container>
-        <Calculator onInputChange={handleInputChange}/>
+        <Calculator onInputChange={handleInputChange} />
         <Box
           style={{
             display: "flex",
@@ -89,29 +94,33 @@ export function HomePage() {
             <Button
               variant="contained"
               onClick={getRandomString}
-              style={{ maxWidth: 144 }}
+              style={{ maxWidth: 180 }}
             >
-              Gerar string
+              Generate string
             </Button>
           </Box>
-          <InputBase
-            sx={{
-              bgcolor: "#FFFFFF",
-              border: "2px solid #0a0a0a",
-              borderRadius: 2,
-              padding: 1,
-              height: 40,
-              color: "#033261",
-              pointerEvents: "none",
-              userSelect: "none",
-              fontWeight: 600,
-              width: "100%",
-            }}
-            value={randomString}
-            inputProps={{ style: { textAlign: "center" } }}
-          />
         </Box>
       </Container>
+      <InputBase
+        sx={{
+          bgcolor: "#FFFFFF",
+          border: "1px solid #cccccc",
+          borderRadius: 2,
+          padding: 1,
+          height: 46,
+          color: "#333",
+          pointerEvents: "none",
+          userSelect: "none",
+          fontWeight: 600,
+          maxWidth: 700,
+          fontSize: 24,
+          mt: 2,
+          mb: 2,
+        }}
+        inputProps={{ style: { textAlign: "center" } }}
+        value={randomString}
+        fullWidth
+      />
     </>
   );
 }
