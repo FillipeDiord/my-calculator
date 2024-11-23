@@ -183,3 +183,46 @@ export async function currentBalance() {
     return;
   }
 }
+
+export async function getTransactionHistory() {
+  try {
+    const userToken = localStorage.getItem("userToken");
+    const userId = Number(localStorage.getItem("userId"));
+
+    if (!userToken) {
+      toast.error("Unable to get user token");
+      return;
+    }
+
+    if (!userId) {
+      toast.error("Unable to get userId");
+      return;
+    }
+
+    const optionsRequest = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+
+    const response = await fetch(`${API_URL}/operations`, optionsRequest);
+
+    if (response.ok) {
+      const data = await response.json();
+
+      console.log('==========OPERATIONS', data);
+      return data;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "An unknown error occurred");
+    }
+  } catch (error) {
+    console.log("An error occurred while getting the current balance", error);
+    toast.error(
+      `An error occurred while getting the current balance ${error}`
+    );
+    return;
+  }
+}

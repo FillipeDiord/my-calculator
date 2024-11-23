@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Box, InputBase } from "@mui/material";
+import {
+  Button,
+  Container,
+  Box,
+  InputBase,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+import { ListAltTwoTone } from "@mui/icons-material";
 import { Calculator } from "../components/Calculator";
 import { useNavigate } from "react-router-dom";
 import { currentBalance, generateRandomString } from "../services/api";
@@ -35,13 +43,13 @@ export function HomePage() {
 
   return (
     <>
-      <Container style={{ width: "100%", marginBottom: 20 }}>
+      <Container style={{ flexDirection: "column" }}>
         <Box
           style={{
             display: "flex",
             width: "100%",
             gap: 20,
-            justifyContent: "space-between",
+            justifyContent: "center",
           }}
         >
           <InputBase
@@ -57,22 +65,39 @@ export function HomePage() {
               fontWeight: 600,
               fontSize: 24,
               mb: 2,
+              maxWidth: 200,
             }}
             value={currentBalanceValue}
+            size="medium"
             inputProps={{ style: { textAlign: "center" } }}
-            fullWidth
           />
+          <Tooltip title="List operations">
+            <IconButton
+              aria-label="listoperations"
+              color="primary"
+              style={{ maxHeight: 46, borderRadius: 10 }}
+              onClick={() => navigate("/operations-history")}
+            >
+              <ListAltTwoTone />
+            </IconButton>
+          </Tooltip>
           <Button
             variant="contained"
             style={{ maxHeight: 46 }}
             onClick={() => navigate("/")}
           >
-            logout
+            Logout
           </Button>
         </Box>
-      </Container>
-      <Container>
-        <Calculator onInputChange={handleInputChange} />
+        <Box
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Calculator onInputChange={handleInputChange} />
+        </Box>
         <Box
           style={{
             display: "flex",
@@ -112,8 +137,8 @@ export function HomePage() {
           pointerEvents: "none",
           userSelect: "none",
           fontWeight: 600,
-          maxWidth: 700,
-          fontSize: 24,
+          maxWidth: 400,
+          fontSize: 18,
           mt: 2,
           mb: 2,
         }}
