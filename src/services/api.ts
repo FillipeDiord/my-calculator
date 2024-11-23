@@ -207,22 +207,63 @@ export async function getTransactionHistory() {
       },
     };
 
-    const response = await fetch(`${API_URL}/operations`, optionsRequest);
+    const response = await fetch(`${API_URL}/operations?userId=${userId}`, optionsRequest);
 
     if (response.ok) {
       const data = await response.json();
 
-      console.log('==========OPERATIONS', data);
       return data;
     } else {
       const errorData = await response.json();
       throw new Error(errorData.message || "An unknown error occurred");
     }
   } catch (error) {
-    console.log("An error occurred while getting the current balance", error);
+    console.log("An error occurred while retrieving transaction history", error);
     toast.error(
-      `An error occurred while getting the current balance ${error}`
+      `An error occurred while retrieving transaction history ${error}`
     );
     return;
+  }
+}
+
+export async function deleteOperationHistory(operationId: number): Promise<boolean> {
+  try {
+    const userToken = localStorage.getItem("userToken");
+    const userId = Number(localStorage.getItem("userId"));
+
+    if (!userToken) {
+      toast.error("Unable to get user token");
+      return false;
+    }
+
+    if (!userId) {
+      toast.error("Unable to get userId");
+      return false;
+    }
+
+    const optionsRequest = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+
+    const response = await fetch(`${API_URL}/operations/${operationId}`, optionsRequest);
+
+    if (response.ok) {
+      toast.success('historical restoration operation');
+
+      return true;
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "An unknown error occurred");
+    }
+  } catch (error) {
+    console.log("An error occurred while deleting the operation from history", error);
+    toast.error(
+      `An error occurred while deleting the operation from history ${error}`
+    );
+    return false;
   }
 }

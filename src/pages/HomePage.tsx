@@ -71,7 +71,7 @@ export function HomePage() {
             size="medium"
             inputProps={{ style: { textAlign: "center" } }}
           />
-          <Tooltip title="List operations">
+          <Tooltip title="Operations history">
             <IconButton
               aria-label="listoperations"
               color="primary"

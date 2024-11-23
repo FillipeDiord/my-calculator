@@ -15,5 +15,12 @@
 }
 
 .listItem {
-  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.listItemText {
+  width: 200px;
+  text-align: center;
 }
